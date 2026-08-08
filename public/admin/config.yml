@@ -3,6 +3,7 @@ backend:
   repo: vit-dotcom/vit-dotcom.github.io
   branch: main
   auth_method: token
+  use_graphql: true
 
 # Реальный адрес сайта
 site_url: https://vit-dotcom.github.io
