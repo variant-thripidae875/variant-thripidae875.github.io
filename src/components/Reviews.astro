@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const reviews = (await getCollection('reviews')).sort((a, b) => a.data.order - b.data.order);
+const items = await Promise.all(
+  reviews.map(async (r) => ({ ...r.data, Content: (await render(r)).Content }))
+);
+---
+
+<section id="reviews" class="hairline">
+  <div class="container-page py-20 md:py-28">
+    <p class="eyebrow mb-4">Отзывы</p>
+    <h2 class="max-w-xl font-display text-display-md text-paper">Что говорят те, кто уже купил или продал бизнес</h2>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        items.map((item) => (
+          <div class="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-7">
+            <div class="text-sm leading-relaxed text-muted">
+              <item.Content />
+            </div>
+            <p class="mt-auto font-mono text-xs uppercase tracking-[0.14em] text-brass">{item.author}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

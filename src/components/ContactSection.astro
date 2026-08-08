@@ -1,0 +1,28 @@
+---
+interface Props {
+  phone: string;
+  whatsapp: string;
+  telegram: string;
+}
+const { phone, whatsapp, telegram } = Astro.props;
+const telHref = `tel:${phone.replace(/[^\d+]/g, '')}`;
+const waHref = `https://wa.me/${whatsapp.replace(/[^\d]/g, '')}`;
+const tgHref = `https://t.me/${telegram.replace(/^@/, '')}`;
+---
+
+<section id="contacts" class="hairline">
+  <div class="container-page py-20 md:py-28">
+    <p class="eyebrow mb-4">Контакты</p>
+    <h2 class="mb-10 max-w-xl font-display text-display-md text-paper">Свяжитесь напрямую</h2>
+
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
+      <a href={telHref} class="font-display text-3xl text-paper transition-colors hover:text-brass md:text-4xl">
+        {phone}
+      </a>
+      <div class="flex gap-3">
+        <a href={waHref} target="_blank" rel="noopener" class="btn-primary">Позвонить в WhatsApp</a>
+        <a href={tgHref} target="_blank" rel="noopener" class="btn-ghost">Telegram</a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  url: string;
+  title: string;
+  poster?: any;
+  aspect?: 'portrait' | 'landscape';
+}
+const { url, title, poster, aspect } = Astro.props;
+
+function getYouTubeId(u: string): string | null {
+  const m = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
+// Ссылки VK Клипы/Видео: и обычные (vk.ru/clip-238886261_456239097),
+// и внутри параметра z= (vk.ru/group?z=clip-238886261_456239097).
+function getVkEmbed(u: string): { src: string; portrait: boolean } | null {
+  const m = u.match(/(clip|video)-?(\d+)_(\d+)/);
+  if (!m) return null;
+  const [, kind, groupId, videoId] = m;
+  const oid = `-${groupId}`;
+  const file = kind === 'clip' ? 'clip_ext.php' : 'video_ext.php';
+  return { src: `https://vk.ru/${file}?oid=${oid}&id=${videoId}&autoplay=1`, portrait: kind === 'clip' };
+}
+
+const ytId = getYouTubeId(url);
+const vk = !ytId ? getVkEmbed(url) : null;
+const isMp4 = /\.(mp4|webm)(\?.*)?$/i.test(url);
+
+const embedSrc = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1` : vk ? vk.src : url;
+const isPortrait = aspect ? aspect === 'portrait' : vk?.portrait ?? false;
+const aspectClass = isPortrait ? 'aspect-[9/16]' : 'aspect-video';
+---
+
+<div
+  class:list={['video-embed group relative w-full overflow-hidden rounded-xl border border-line bg-surface', aspectClass]}
+  data-src={embedSrc}
+  data-mp4={isMp4 ? '1' : '0'}
+>
+  {
+    poster ? (
+      <Image
+        src={poster}
+        alt={title}
+        class="video-poster h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+        widths={isPortrait ? [360, 600] : [480, 800]}
+        sizes={isPortrait ? '(min-width: 768px) 22vw, 80vw' : '(min-width: 768px) 32vw, 90vw'}
+      />
+    ) : (
+      <div class="video-poster h-full w-full bg-surface-raised" />
+    )
+  }
+  <div class="pointer-events-none absolute inset-0 bg-ink/30"></div>
+  <button
+    type="button"
+    aria-label={`Смотреть видео: ${title}`}
+    class="video-play absolute inset-0 flex items-center justify-center"
+  >
+    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-paper/95 shadow-card transition-transform duration-300 group-hover:scale-110">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 11L0.25 21.6913V0.308658L19 11Z" fill="#0A0B0D" />
+      </svg>
+    </span>
+  </button>
+  <p class="absolute bottom-4 left-4 right-4 font-display text-lg text-paper">{title}</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video-embed').forEach((wrap) => {
+    const btn = wrap.querySelector('.video-play');
+    btn?.addEventListener(
+      'click',
+      () => {
+        const src = wrap.dataset.src || '';
+        const isMp4 = wrap.dataset.mp4 === '1';
+        wrap.querySelectorAll('.video-poster, .video-play').forEach((el) => el.remove());
+        if (isMp4) {
+          const video = document.createElement('video');
+          video.src = src;
+          video.controls = true;
+          video.autoplay = true;
+          video.className = 'h-full w-full object-cover';
+          wrap.appendChild(video);
+        } else {
+          const iframe = document.createElement('iframe');
+          iframe.src = src;
+          iframe.className = 'absolute inset-0 h-full w-full';
+          iframe.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock';
+          iframe.allowFullscreen = true;
+          iframe.loading = 'lazy';
+          wrap.appendChild(iframe);
+        }
+      },
+      { once: true }
+    );
+  });
+</script>

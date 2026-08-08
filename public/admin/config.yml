@@ -1,0 +1,100 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Реальный адрес сайта
+site_url: https://vit-dotcom.github.io
+display_url: https://vit-dotcom.github.io
+logo_url: /favicon.svg
+
+media_folder: ""
+public_folder: ""
+
+locale: "ru"
+
+collections:
+  - name: "settings"
+    label: "Настройки сайта"
+    files:
+      - name: "main"
+        label: "Основные тексты и фото"
+        file: "src/content/settings/main.yaml"
+        fields:
+          - { label: "Фото на первом экране", name: "heroPhoto", widget: "image" }
+          - { label: "Заголовок (H1)", name: "heroTitle", widget: "string" }
+          - { label: "Подзаголовок", name: "heroSubtitle", widget: "text" }
+          - { label: "Фото в блоке «Обо мне»", name: "aboutPhoto", widget: "image" }
+          - { label: "Текст «Обо мне»", name: "aboutText", widget: "text" }
+          - { label: "Телефон", name: "phone", widget: "string", hint: "Формат: +79950055958" }
+          - { label: "WhatsApp номер", name: "whatsapp", widget: "string", hint: "Формат: +79950055958" }
+          - { label: "Telegram", name: "telegram", widget: "string", hint: "Без @, например: berezavitaliy" }
+          - label: "Карточки доверия"
+            name: "trustCards"
+            widget: "list"
+            fields:
+              - { label: "Заголовок", name: "title", widget: "string" }
+              - { label: "Текст", name: "text", widget: "text" }
+
+  - name: "objects"
+    label: "Объекты"
+    label_singular: "Объект"
+    folder: "src/content/objects"
+    create: true
+    slug: "{{slug}}"
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    fields:
+      - { label: "Название", name: "title", widget: "string" }
+      - { label: "Отрасль", name: "industry", widget: "string" }
+      - { label: "Цена, ₽", name: "price", widget: "number", value_type: "int" }
+      - { label: "Город", name: "city", widget: "string", default: "Краснодар" }
+      - { label: "Продано", name: "sold", widget: "boolean", default: false }
+      - { label: "Обложка (превью для видео)", name: "cover", widget: "image" }
+      - { label: "Ссылка на видео", name: "videoUrl", widget: "string", hint: "Ссылка на VK Клип/Видео (vk.ru/clip-... или vk.ru/video-...), YouTube или прямая ссылка на .mp4" }
+      - { label: "Краткое описание (для карточки и SEO)", name: "summary", widget: "text" }
+      - { label: "Порядок отображения", name: "order", widget: "number", default: 0, hint: "Меньше — выше на странице" }
+      - { label: "Дата публикации", name: "publishDate", widget: "datetime", default: "" }
+
+  - name: "videos"
+    label: "Видео («Как проходит работа»)"
+    label_singular: "Видео"
+    folder: "src/content/videos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Название", name: "title", widget: "string" }
+      - label: "Роль ролика"
+        name: "role"
+        widget: "select"
+        options:
+          - { label: "Кто такой Виталий", value: "about" }
+          - { label: "Работа с покупателями", value: "buyers" }
+          - { label: "Работа с продавцами", value: "sellers" }
+          - { label: "Другое", value: "other" }
+      - { label: "Ссылка на видео", name: "url", widget: "string", hint: "YouTube, RuTube, VK Video или прямая ссылка на .mp4" }
+      - { label: "Обложка (превью)", name: "poster", widget: "image", required: false }
+      - { label: "Порядок", name: "order", widget: "number", default: 0 }
+
+  - name: "reviews"
+    label: "Отзывы"
+    label_singular: "Отзыв"
+    folder: "src/content/reviews"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Автор (роль + тип сделки, без выдуманных ФИО)", name: "author", widget: "string", hint: "Например: «Покупатель — швейное производство»" }
+      - { label: "Тип сделки", name: "dealType", widget: "string" }
+      - { label: "Порядок", name: "order", widget: "number", default: 0 }
+      - { label: "Текст отзыва", name: "body", widget: "markdown" }
+
+  - name: "faq"
+    label: "Вопросы и ответы"
+    label_singular: "Вопрос"
+    folder: "src/content/faq"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Вопрос", name: "question", widget: "string" }
+      - { label: "Порядок", name: "order", widget: "number", default: 0 }
+      - { label: "Ответ", name: "body", widget: "markdown" }

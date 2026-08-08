@@ -1,0 +1,21 @@
+---
+import VideoEmbed from './VideoEmbed.astro';
+import { getCollection } from 'astro:content';
+
+const videos = (await getCollection('videos')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<section id="how-we-work" class="hairline">
+  <div class="container-page py-20 md:py-28">
+    <p class="eyebrow mb-4">Как проходит работа</p>
+    <h2 class="max-w-xl font-display text-display-md text-paper">Три коротких видео вместо длинной презентации</h2>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {
+        videos.map((v) => (
+          <VideoEmbed url={v.data.url} title={v.data.title} poster={v.data.poster} />
+        ))
+      }
+    </div>
+  </div>
+</section>

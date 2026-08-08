@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+const items = await Promise.all(
+  entries.map(async (e) => ({ question: e.data.question, Content: (await render(e)).Content }))
+);
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: entries.map((e) => ({
+    '@type': 'Question',
+    name: e.data.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: e.body?.replace(/[#>*_`]/g, '').trim() ?? '',
+    },
+  })),
+};
+---
+
+<section id="faq" class="hairline">
+  <div class="container-page py-20 md:py-28">
+    <p class="eyebrow mb-4">Вопросы</p>
+    <h2 class="mb-12 max-w-xl font-display text-display-md text-paper">Частые вопросы</h2>
+
+    <div class="mx-auto max-w-2xl divide-y divide-line border-y border-line">
+      {
+        items.map((item, i) => (
+          <details class="group py-5" name="faq">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left">
+              <span class="font-display text-lg text-paper">{item.question}</span>
+              <span class="shrink-0 font-mono text-xl text-brass transition-transform duration-300 group-open:rotate-45">+</span>
+            </summary>
+            <div class="mt-3 max-w-xl text-sm leading-relaxed text-muted">
+              <item.Content />
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</section>

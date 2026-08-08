@@ -1,0 +1,29 @@
+---
+interface Card {
+  title: string;
+  text: string;
+}
+interface Props {
+  cards: Card[];
+}
+const { cards } = Astro.props;
+---
+
+<section id="trust" class="hairline">
+  <div class="container-page py-20 md:py-28">
+    <p class="eyebrow mb-4">Почему мне доверяют</p>
+    <h2 class="max-w-xl font-display text-display-md text-paper">Не преимущества из шаблона — а то, что реально делаю</h2>
+
+    <div class="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {
+        cards.map((c, i) => (
+          <div class="flex flex-col gap-3 bg-surface p-8">
+            <span class="font-mono text-xs text-brass">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="font-display text-lg text-paper">{c.title}</h3>
+            <p class="text-sm leading-relaxed text-muted">{c.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

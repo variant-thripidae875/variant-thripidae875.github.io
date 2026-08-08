@@ -1,0 +1,104 @@
+---
+interface Props {
+  whatsapp: string;
+}
+const { whatsapp } = Astro.props;
+const waNumber = whatsapp.replace(/[^\d]/g, '');
+
+const tabs = [
+  { id: 'buy', label: 'Подобрать бизнес', anchor: 'lead-buy' },
+  { id: 'sell', label: 'Продать бизнес', anchor: 'lead-sell' },
+  { id: 'call', label: 'Обратный звонок', anchor: 'lead-call' },
+];
+---
+
+<section id="lead" class="hairline">
+  <div class="container-page py-20 md:py-28">
+    <p class="eyebrow mb-4">Заявка</p>
+    <h2 class="mb-12 max-w-xl font-display text-display-md text-paper">Оставьте заявку — отвечаю лично</h2>
+
+    <div class="mx-auto max-w-xl rounded-2xl border border-line bg-surface p-6 md:p-10">
+      <div class="mb-8 flex flex-wrap gap-2" role="tablist">
+        {
+          tabs.map((t, i) => (
+            <button
+              type="button"
+              class="lead-tab rounded-full border border-line px-4 py-2 text-sm text-muted transition-colors data-[active=true]:border-brass data-[active=true]:text-paper"
+              data-tab={t.id}
+              data-active={i === 0 ? 'true' : 'false'}
+              id={t.anchor}
+            >
+              {t.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <form id="lead-form" class="grid gap-4">
+        <input type="hidden" name="type" value="buy" />
+        <div>
+          <label class="mb-1.5 block text-sm text-muted" for="lead-name">Имя</label>
+          <input
+            id="lead-name"
+            name="name"
+            required
+            class="w-full rounded-lg border border-line bg-ink px-4 py-3 text-paper outline-none transition-colors focus:border-brass"
+            placeholder="Как к вам обращаться"
+          />
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm text-muted" for="lead-phone">Телефон</label>
+          <input
+            id="lead-phone"
+            name="phone"
+            required
+            type="tel"
+            class="w-full rounded-lg border border-line bg-ink px-4 py-3 text-paper outline-none transition-colors focus:border-brass"
+            placeholder="+7"
+          />
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm text-muted" for="lead-comment">Комментарий</label>
+          <textarea
+            id="lead-comment"
+            name="comment"
+            rows="3"
+            class="w-full resize-none rounded-lg border border-line bg-ink px-4 py-3 text-paper outline-none transition-colors focus:border-brass"
+            placeholder="Отрасль, бюджет или всё, что важно знать"></textarea>
+        </div>
+        <button type="submit" class="btn-primary mt-2 w-full">Отправить в WhatsApp</button>
+        <p class="text-center text-xs text-muted">
+          Заявка откроется в WhatsApp уже заполненной — останется нажать «Отправить».
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ waNumber }}>
+  const tabLabels = { buy: 'Подобрать бизнес', sell: 'Продать бизнес', call: 'Обратный звонок' };
+  const form = document.getElementById('lead-form');
+  const typeInput = form.querySelector('input[name="type"]');
+  const tabs = document.querySelectorAll('.lead-tab');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.setAttribute('data-active', 'false'));
+      tab.setAttribute('data-active', 'true');
+      typeInput.value = tab.dataset.tab;
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const type = tabLabels[data.get('type')] || 'Заявка';
+    const name = data.get('name');
+    const phone = data.get('phone');
+    const comment = data.get('comment');
+    const text = [`Заявка с сайта: ${type}`, `Имя: ${name}`, `Телефон: ${phone}`, comment ? `Комментарий: ${comment}` : null]
+      .filter(Boolean)
+      .join('\n');
+    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
+  });
+</script>

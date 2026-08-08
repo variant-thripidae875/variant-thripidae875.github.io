@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  photo: any;
+  title: string;
+  subtitle: string;
+  phone: string;
+  whatsapp: string;
+  telegram: string;
+}
+const { photo, title, subtitle, phone, whatsapp, telegram } = Astro.props;
+const telHref = `tel:${phone.replace(/[^\d+]/g, '')}`;
+const waHref = `https://wa.me/${whatsapp.replace(/[^\d]/g, '')}`;
+const tgHref = `https://t.me/${telegram.replace(/^@/, '')}`;
+---
+
+<section class="container-page relative grid items-center gap-12 pb-20 pt-6 md:grid-cols-[1.1fr_0.9fr] md:gap-8 md:pb-28 md:pt-10">
+  <div class="order-2 animate-rise md:order-1" style="animation-delay:80ms">
+    <p class="eyebrow mb-5">Личный бренд · Краснодар</p>
+    <h1 class="font-display text-display-xl text-paper">
+      {title}
+    </h1>
+    <p class="mt-6 max-w-md text-lg leading-relaxed text-muted">
+      {subtitle}
+    </p>
+
+    <div class="mt-9 flex flex-wrap items-center gap-3">
+      <a href={telHref} class="btn-primary">Позвонить</a>
+      <a href={waHref} target="_blank" rel="noopener" class="btn-ghost">WhatsApp</a>
+      <a href={tgHref} target="_blank" rel="noopener" class="btn-ghost">Telegram</a>
+    </div>
+
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+      <a href="#lead-buy" class="text-sm text-brass underline decoration-brass/30 underline-offset-4 transition-colors hover:decoration-brass">
+        Подобрать бизнес →
+      </a>
+      <span class="text-line">/</span>
+      <a href="#lead-sell" class="text-sm text-brass underline decoration-brass/30 underline-offset-4 transition-colors hover:decoration-brass">
+        Продать бизнес →
+      </a>
+    </div>
+  </div>
+
+  <div class="order-1 animate-rise md:order-2">
+    <div class="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-line shadow-card md:max-w-none">
+      <Image
+        src={photo}
+        alt="Виталий — специалист по покупке и продаже готового бизнеса"
+        class="h-full w-full object-cover"
+        widths={[480, 768, 1200]}
+        sizes="(min-width: 768px) 40vw, 90vw"
+      />
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent"></div>
+    </div>
+  </div>
+</section>

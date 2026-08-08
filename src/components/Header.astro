@@ -1,0 +1,26 @@
+---
+interface Props {
+  phone: string;
+}
+const { phone } = Astro.props;
+const telHref = `tel:${phone.replace(/[^\d+]/g, '')}`;
+---
+
+<header class="container-page relative z-20 flex items-center justify-between py-6 md:py-8">
+  <a href="/" class="flex items-baseline gap-2">
+    <span class="font-display text-lg tracking-tight text-paper">Виталий</span>
+    <span class="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-muted sm:inline"
+      >Готовый бизнес</span
+    >
+  </a>
+
+  <nav class="hidden items-center gap-8 md:flex">
+    <a href="#about" class="text-sm text-muted transition-colors hover:text-paper">Обо мне</a>
+    <a href="#objects" class="text-sm text-muted transition-colors hover:text-paper">Объекты</a>
+    <a href="#trust" class="text-sm text-muted transition-colors hover:text-paper">Почему я</a>
+    <a href="#reviews" class="text-sm text-muted transition-colors hover:text-paper">Отзывы</a>
+    <a href="#faq" class="text-sm text-muted transition-colors hover:text-paper">Вопросы</a>
+  </nav>
+
+  <a href={telHref} class="btn-ghost hidden sm:inline-flex">{phone}</a>
+</header>

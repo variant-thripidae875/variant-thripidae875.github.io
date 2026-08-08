@@ -1,0 +1,30 @@
+---
+import VideoEmbed from './VideoEmbed.astro';
+
+interface Props {
+  title: string;
+  industry: string;
+  price: number;
+  city: string;
+  sold: boolean;
+  cover: any;
+  videoUrl: string;
+  summary: string;
+}
+const { title, industry, price, city, sold, cover, videoUrl, summary } = Astro.props;
+
+const formattedPrice = new Intl.NumberFormat('ru-RU').format(price);
+---
+
+<div class="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-300 hover:border-brass/40">
+  <div class="relative">
+    <VideoEmbed url={videoUrl} title={title} poster={cover} aspect="portrait" />
+    {sold && <span class="stamp animate-stamp">Продано</span>}
+  </div>
+  <div class="flex flex-1 flex-col gap-2 p-6">
+    <p class="eyebrow">{industry} · {city}</p>
+    <h3 class="font-display text-xl text-paper">{title}</h3>
+    <p class="text-sm leading-relaxed text-muted">{summary}</p>
+    <p class="mt-2 font-mono text-lg text-brass">{formattedPrice} ₽</p>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import VideoSection from '../components/VideoSection.astro';
+import ObjectsGrid from '../components/ObjectsGrid.astro';
+import TrustSection from '../components/TrustSection.astro';
+import Reviews from '../components/Reviews.astro';
+import FAQ from '../components/FAQ.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ContactSection from '../components/ContactSection.astro';
+import Footer from '../components/Footer.astro';
+import { getEntry } from 'astro:content';
+
+const settings = await getEntry('settings', 'main');
+const s = settings!.data;
+---
+
+<BaseLayout
+  title="Виталий | Готовый бизнес — покупка и продажа бизнеса от 15 млн ₽"
+  description="Покупка и продажа готового бизнеса от 15 миллионов рублей. Проверка бизнеса, переговоры, сопровождение сделки от первого разговора до подписанного акта."
+>
+  <Header phone={s.phone} />
+  <main>
+    <Hero photo={s.heroPhoto} title={s.heroTitle} subtitle={s.heroSubtitle} phone={s.phone} whatsapp={s.whatsapp} telegram={s.telegram} />
+    <About photo={s.aboutPhoto} text={s.aboutText} />
+    <VideoSection />
+    <ObjectsGrid />
+    <TrustSection cards={s.trustCards} />
+    <Reviews />
+    <FAQ />
+    <LeadForm whatsapp={s.whatsapp} />
+    <ContactSection phone={s.phone} whatsapp={s.whatsapp} telegram={s.telegram} />
+  </main>
+  <Footer />
+</BaseLayout>

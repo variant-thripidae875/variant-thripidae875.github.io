@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  photo: any;
+  text: string;
+}
+const { photo, text } = Astro.props;
+---
+
+<section id="about" class="hairline">
+  <div class="container-page grid gap-10 py-20 md:grid-cols-[0.8fr_1.2fr] md:items-center md:gap-16 md:py-28">
+    <div class="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-line md:max-w-none">
+      <Image
+        src={photo}
+        alt="Виталий за работой"
+        class="h-full w-full object-cover grayscale"
+        widths={[400, 700]}
+        sizes="(min-width: 768px) 32vw, 80vw"
+      />
+    </div>
+    <div>
+      <p class="eyebrow mb-4">Кто такой Виталий</p>
+      <p class="font-display text-display-md text-paper">{text}</p>
+    </div>
+  </div>
+</section>
