@@ -1,6 +1,7 @@
 backend:
   name: git-gateway
   branch: main
+  base_url: https://silver-nougat-6fdff2.netlify.app
 
 # Реальный адрес сайта
 site_url: https://vit-dotcom.github.io
