@@ -2,6 +2,7 @@ backend:
   name: github
   repo: vit-dotcom/vit-dotcom.github.io
   branch: main
+  auth_method: token
 
 # Реальный адрес сайта
 site_url: https://vit-dotcom.github.io
